@@ -47,9 +47,8 @@ app.get('/test-email', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
-app.use('/api/contact',  require('./routes/contact'));
-app.use('/api/messages', require('./routes/messages'));
+app.use('/api/contact',  require('./contact'));
+app.use('/api/messages', require('./messages'));
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 app.use((err, req, res, next) => res.status(500).json({ error: err.message }));
