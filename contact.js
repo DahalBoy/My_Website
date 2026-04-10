@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     // Save to MongoDB
     let savedId = null;
     try {
-      const Message = require('../models/Message');
+      const Message = require('./Message');
       const doc = await Message.create({
         name, email,
         phone: phone || null,
