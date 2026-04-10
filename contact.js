@@ -20,28 +20,26 @@ router.post('/', async (req, res) => {
     if (Object.keys(errors).length) return res.status(422).json({ error: 'Validation failed', fields: errors });
 
     // Save to MongoDB
-    let savedId = null;
     try {
       const Message = require('./Message');
-      const doc = await Message.create({
+      await Message.create({
         name, email,
         phone: phone || null,
         subject: subject || '(no subject)',
         message,
         ip_address: req.ip,
       });
-      savedId = doc._id;
     } catch (e) { console.error('DB:', e.message); }
 
     // Send email
     let emailSent = false;
     try {
       const nodemailer = require('nodemailer');
-      const t = nodemailer.createTransport({
+      const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com', port: 587, secure: false,
         auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
       });
-      await t.sendMail({
+      await transporter.sendMail({
         from: `"Portfolio" <${process.env.EMAIL_USER}>`,
         to: process.env.OWNER_EMAIL || process.env.EMAIL_USER,
         replyTo: email,
@@ -64,15 +62,8 @@ router.post('/', async (req, res) => {
         text: `From: ${name} <${email}>\n\n${message}`,
       });
       emailSent = true;
-    } catch (e) { console.error('Email:', e.message); }
-
-    // Update DB
-    if (savedId) {
-      try {
-        const Message = require('./Message');
-        await Message.findByIdAndUpdate(savedId, { email_sent: emailSent });
-      } catch (e) {}
-    }
+      console.log('Email sent successfully');
+    } catch (e) { console.error('Email error:', e.message); }
 
     res.status(201).json({ success: true, message: "Thanks! I'll get back to you soon." });
   } catch (err) {
