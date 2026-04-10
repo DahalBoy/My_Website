@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const Message = require('../models/Message');
+    const Message = require('./Message');
     await Message.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (e) {
