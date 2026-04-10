@@ -13,7 +13,7 @@ router.use(requireAdminKey);
 
 router.get('/', async (req, res) => {
   try {
-   const Message = require('./Message');
+    const Message = require('./Message');
     const msgs = await Message.find({}).sort({ created_at: -1 }).limit(50).lean();
     res.json({ data: msgs, total: msgs.length });
   } catch (e) {
