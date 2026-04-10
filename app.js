@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const app = express();
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: '*',
   methods: ['GET', 'POST', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'X-Admin-Key'],
 }));
@@ -47,6 +47,7 @@ app.get('/test-email', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 app.use('/api/contact',  require('./contact'));
 app.use('/api/messages', require('./messages'));
 
