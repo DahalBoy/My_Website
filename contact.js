@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
     // Update DB
     if (savedId) {
       try {
-        const Message = require('../models/Message');
+        const Message = require('./Message');
         await Message.findByIdAndUpdate(savedId, { email_sent: emailSent });
       } catch (e) {}
     }
